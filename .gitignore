@@ -19,6 +19,8 @@
 *.tar.gz
 *.rar
 
+application.yml
+
 target
 
 .idea
