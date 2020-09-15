@@ -3,7 +3,7 @@ spring:
     active: dev
   data:
     mongodb:
-      uri: mongodb://admin:123456@123.57.63.140:27017/studyplan
+      uri: mongodb://normal:123456@123.57.63.140:27017/studyplan
   servlet:
     multipart:
       maxFileSize: 100MB
@@ -11,6 +11,6 @@ spring:
 
 wechat:
   sessionHost: https://api.weixin.qq.com/sns/jscode2session
-  appId: wxc2455722e0f21529
-  secret: 21934bcd3df3b1704fc0f6f14b8e8211
+  appId: wx9134da82420b59ee
+  secret: 51ca797878678f637160a50b0d699b26
   grantType: authorization_code

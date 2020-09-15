@@ -9,4 +9,6 @@ public class Constant {
     public static final String ADMIN = "admin";
     /** 数据权限过滤 */
     public static final String HEADER_TOKEN_NAME = "Authorization";
+    /** 普通账号 */
+    public static final String COMMON = "common";
 }
