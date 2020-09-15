@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @Repository
 public class TaskMapper {
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     /**
      * 查找
@@ -56,13 +57,27 @@ public class TaskMapper {
      * 增加
      */
 
-    public boolean saveOne(Task task){
-         Task res = mongoTemplate.insert(task, "task");
-         return StringUtils.isNotBlank(res.getId());
+    public String saveOne(Task task){
+         return mongoTemplate.insert(task, "task").getId();
     }
 
     public void saveMany(List<Task> tasks){
         mongoTemplate.insert(tasks, "task");
+    }
+
+    /**
+     * 根据taskId 新增记录
+     * @param recordId
+     * @param taskId
+     * @return
+     */
+    public boolean saveRecord(String recordId, String taskId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(taskId));
+        Update update = new Update();
+        update.addToSet("submit_records",recordId);
+        long res = mongoTemplate.upsert(query, update, "task").getModifiedCount();
+        return res > 0;
     }
 
     /**

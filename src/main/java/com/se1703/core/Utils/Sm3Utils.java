@@ -3,11 +3,7 @@ package com.se1703.core.Utils;
 import org.bouncycastle.crypto.digests.SM3Digest;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
-import java.io.UnsupportedEncodingException;
-import java.security.Security;
-import java.util.Arrays;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -16,6 +12,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class Sm3Utils {
 
+    private static final String defaultKey = "hust软工1703第二十一组";
     /**
      * 加密
      *
@@ -61,7 +58,7 @@ public class Sm3Utils {
      * @return 十六进制加密字符串
      */
     public static String hmac(String srcStr){
-        return hmac("hust软工1703第二十一组",srcStr);
+        return hmac(defaultKey,srcStr);
     }
 
 
@@ -98,7 +95,7 @@ public class Sm3Utils {
      * @return 校验结果
      */
     public static boolean verificationWithKey(String plainText, String cipherText){
-        return verificationWithKey(plainText,cipherText,"hust软工1703第二十一组");
+        return verificationWithKey(plainText,cipherText,defaultKey);
     }
 
 }

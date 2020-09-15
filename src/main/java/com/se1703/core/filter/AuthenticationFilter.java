@@ -37,7 +37,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         // swagger
         Stream<String> swagger = Stream.of("/swagger-resources/**", "/swagger-ui.html", "/v2/**", "/webjars/**");
         // 不需要登录可以访问的公共资源
-        Stream<String> common = Stream.of("/auth/login");
+        Stream<String> common = Stream.of("/auth/login","/auth/adminLogin");
         // 校验请求request.getRequestURI()是否匹配
         PathMatcher pathMatcher = new AntPathMatcher();
         return Stream.of(swagger, common).flatMap(item -> item)

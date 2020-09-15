@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -56,14 +57,21 @@ public class UserDataMapper {
      * 增加
      */
 
-    public boolean saveOne(UserData task){
-        UserData res = mongoTemplate.insert(task, "user_data");
-        return StringUtils.isNotBlank(res.getId());
-    }
+    /**
+     *
+     * @param userData
+     * @return task ID
+     */
+    public String saveOne(UserData userData){
+        UserData res = mongoTemplate.insert(userData, "user_data");
+        return res.getId();
+}
 
     public void saveMany(List<UserData> tasks){
         mongoTemplate.insert(tasks, "user_data");
     }
+
+
 
     /**
      * 删除

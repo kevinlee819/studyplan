@@ -40,7 +40,7 @@ public class Task {
     private List<Tag> tags;
 
     @Field("submit_records")
-    private List<TaskSubmitRecord> records;
+    private List<String> records;
 
     /**
      * 1-正在完成

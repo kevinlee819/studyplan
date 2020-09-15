@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public class TagMapper {
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     /**
      * 根据userId 查找tag
@@ -51,11 +51,22 @@ public class TagMapper {
         return res > 0;
     }
 
+    public boolean deleteByUserIdAndName(String userId, String name){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("user_id").is(userId).and("tag_name").is(name));
+        Long res = mongoTemplate.remove(query, Tag.class, "tag").getDeletedCount();
+        return res > 0;
+    }
+
     public boolean deleteById(String id){
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(id));
         Long res = mongoTemplate.remove(query, Tag.class, "tag").getDeletedCount();
         return res > 0;
+    }
+
+    public String saveTag(Tag tag){
+        return mongoTemplate.insert(tag,"tag").getId();
     }
 
 }

@@ -2,14 +2,18 @@ package com.se1703.studyplan.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.se1703.core.UserContext;
 import com.se1703.core.Utils.HttpRequest;
 import com.se1703.core.Utils.JwtUtil;
 import com.se1703.core.Utils.Sm3Utils;
 import com.se1703.core.aop.LogPoint;
+import com.se1703.core.constant.HttpStatusCodeEnum;
 import com.se1703.core.entity.TokenEntity;
 import com.se1703.core.exception.BusinessException;
 import com.se1703.core.properties.WeAuth;
 import com.se1703.studyplan.entity.User;
+import com.se1703.studyplan.entity.VOs.AdminUser;
+import com.se1703.studyplan.entity.VOs.CurrentUserVO;
 import com.se1703.studyplan.entity.VOs.WxUserInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +86,15 @@ public class AuthService {
                 throw new BusinessException("请用户授权！");
             }
         }
+        return createTokenByUser(user);
+    }
+
+    /**
+     * 根据user创建token
+     * @param user
+     * @return
+     */
+    private String createTokenByUser(User user){
         // 返回token
         TokenEntity tokenEntity = new TokenEntity();
         tokenEntity.setUserName(user.getUserName());
@@ -97,6 +110,34 @@ public class AuthService {
         }
         return token;
     }
+
+
+    public CurrentUserVO getCurrentUser(){
+        TokenEntity tokenEntity = UserContext.getUser();
+        CurrentUserVO currentUserVO = new CurrentUserVO();
+        if (tokenEntity == null) {
+            throw new BusinessException("无法获取到tokenEntity");
+        }
+        currentUserVO.setRole(tokenEntity.getRole());
+        //tokenEntity的UserId指的不是用户的id，而是openId
+        currentUserVO.setUserId(userService.getByOpenId(tokenEntity.getUserId()).getId());
+        currentUserVO.setUserName(tokenEntity.getUserName());
+        return currentUserVO;
+    }
+
+    @LogPoint(message = "管理员登录：")
+    public String genAdminToken(AdminUser entity){
+        String account = entity.getUserName();
+        String password = entity.getPassword();
+        String key = Sm3Utils.hmac(account.concat("&").concat(password));
+        System.out.println(key);
+        User user = userService.getByOpenId(key);
+        if (user == null) {
+            throw new BusinessException("请检查用户名或密码", HttpStatusCodeEnum.BAD_REQUEST);
+        }
+        return createTokenByUser(user);
+    }
+
 
 
 }

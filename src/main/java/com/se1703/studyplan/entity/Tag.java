@@ -20,4 +20,6 @@ public class Tag {
 
     @Field("user_id")
     private String userId;
+
+
 }

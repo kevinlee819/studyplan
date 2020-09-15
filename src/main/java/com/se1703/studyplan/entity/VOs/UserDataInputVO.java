@@ -1,6 +1,9 @@
 package com.se1703.studyplan.entity.VOs;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * @author leekejin
@@ -9,4 +12,11 @@ import lombok.Data;
 @Data
 public class UserDataInputVO {
 
+    private TaskVO task;
+
+    @ApiModelProperty(value = "开始时间")
+    private Date startTime;
+
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
 }
