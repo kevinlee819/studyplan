@@ -1,8 +1,12 @@
 package com.se1703.core.Utils;
 
 import com.mongodb.DBObject;
+import com.se1703.core.exception.BusinessException;
 import org.bson.types.ObjectId;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,32 +15,19 @@ import java.util.List;
  **/
 public class MongoUtils {
 
-    /**
-     * 转换为ObjectId
-     *
-     * @param ids
-     * @return
-     */
-    public static ObjectId[] convertObjectId(List<String> ids) {
-        if (ids == null) {
-            return new ObjectId[0];
+    public static Date objectId2Date(String objectId){
+        if (objectId == null){
+            return null;
         }
-        ObjectId[] objectIds = new ObjectId[ids.size()];
-        if (ids == null || ids.size() == 0) {
-            return objectIds;
-        }
-        for (int i = 0; i < ids.size(); i++) {
-            objectIds[i] = new ObjectId(ids.get(i));
-        }
-        return objectIds;
+        long time = Integer.parseInt(objectId.substring(0, 8), 16) * 1000L;
+        Date date = new Date(time);
+        System.out.println(date.toString());
+        return date;
     }
 
-    public static ObjectId convertObjectId(String id){
-        if (id == null || id.length() == 0) {
-            return null;
-        } else {
-            return new ObjectId(id);
-        }
+    public static String date2ObjectId(Date date){
+        ObjectId objectId = new ObjectId(date);
+        return objectId.toString();
     }
 
 }

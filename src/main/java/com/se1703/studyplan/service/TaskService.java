@@ -4,7 +4,7 @@ import com.se1703.core.exception.BusinessException;
 import com.se1703.studyplan.entity.Tag;
 import com.se1703.studyplan.entity.Task;
 import com.se1703.studyplan.entity.VOs.CreateTaskVO;
-import com.se1703.studyplan.mapper.TagMapper;
+import com.se1703.studyplan.entity.VOs.Result;
 import com.se1703.studyplan.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class TaskService {
         Task task = new Task();
         BeanUtils.copyProperties(task,taskVO);
         String userId = authService.getCurrentUser().getUserId();
-        task.setCreaterId(userId);
+        task.setUserId(userId);
         task.setStatus(1);
         // 下面对数据库内不存在的tag进行新增
         Set<String> tagSetNew = new HashSet<>(taskVO.getTags());
@@ -66,7 +66,25 @@ public class TaskService {
      * @param taskId
      * @return
      */
-    public boolean saveRecord(String recordId, String taskId){
-        return taskMapper.saveRecord(recordId,taskId);
+    public String saveRecord(String recordId, String taskId){
+        int times = taskMapper.countRecord(taskId);
+        int maxtimes = taskMapper.findOneById(taskId).getTimes();
+        if(!taskMapper.saveRecord(recordId,taskId)){
+            return Result.ERR_DATABASE_CANT_REFRESH;
+        }
+        if (times+1 >= maxtimes){
+            if (taskMapper.updateStatus(3,taskId)){
+                return Result.MISSION_COMPLETED;
+            } else {
+                return Result.ERR_DATABASE_CANT_REFRESH;
+            }
+        }
+        return Result.OK;
     }
+
+    public List<Task> getUserTask(){
+        return taskMapper.findByUserId(authService.getCurrentUser().getUserId());
+    }
+
+
 }

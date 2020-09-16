@@ -38,7 +38,7 @@ public class SwaggerConfig {
      * 创建文档
      */
     @Bean
-    public Docket createRestApi() {
+    public Docket userestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())

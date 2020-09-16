@@ -40,7 +40,7 @@ public class TaskMapper {
      */
     public List<Task> findByUserId(String UserId){
         Query query = new Query();
-        query.addCriteria(Criteria.where("creater_id").is(UserId));
+        query.addCriteria(Criteria.where("user_id").is(UserId));
         return mongoTemplate.find(query, Task.class, "task");
     }
 
@@ -98,11 +98,31 @@ public class TaskMapper {
 
     public boolean deleteByUserId(String userId){
         Query query = new Query();
-        query.addCriteria(Criteria.where("creater_id").is(userId));
+        query.addCriteria(Criteria.where("user_id").is(userId));
         Long res = mongoTemplate.remove(query, Task.class, "task").getDeletedCount();
         return res > 0;
     }
 
+    /**
+     * 任务提交次数
+     * @param taskId
+     * @return
+     */
+    public Integer countRecord(String taskId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(taskId));
+        List<Task> list = mongoTemplate.find(query,Task.class,"task");
+        if (list != null && list.size() != 0) {
+            return list.size();
+        } else {return 0;}
+    }
 
+    public boolean updateStatus(Integer status, String taskId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(taskId));
+        Update update = new Update();
+        update.set("status", status);
+        return mongoTemplate.updateFirst(query, update, "task").getModifiedCount() > 0;
+    }
 
 }

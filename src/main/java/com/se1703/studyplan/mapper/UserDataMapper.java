@@ -1,5 +1,6 @@
 package com.se1703.studyplan.mapper;
 
+import com.se1703.core.Utils.MongoUtils;
 import com.se1703.studyplan.entity.UserData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,7 +43,7 @@ public class UserDataMapper {
      */
     public List<UserData> findByUserId(String UserId){
         Query query = new Query();
-        query.addCriteria(Criteria.where("creater_id").is(UserId));
+        query.addCriteria(Criteria.where("user_id").is(UserId));
         return mongoTemplate.find(query, UserData.class, "user_data");
     }
 
@@ -91,8 +94,19 @@ public class UserDataMapper {
 
     public boolean deleteByUserId(String userId){
         Query query = new Query();
-        query.addCriteria(Criteria.where("creater_id").is(userId));
+        query.addCriteria(Criteria.where("user_id").is(userId));
         Long res = mongoTemplate.remove(query, UserData.class, "user_data").getDeletedCount();
         return res > 0;
     }
+
+    public List<UserData> getRecordByDateAndUserId(Date startDate, Date endDate, String userId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id")
+                .gte(MongoUtils.date2ObjectId(startDate))
+                .lte(MongoUtils.date2ObjectId(endDate))
+                .and("user_id").is(userId));
+        return mongoTemplate.find(query, UserData.class, "user_data");
+    }
+
+
 }

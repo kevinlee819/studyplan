@@ -18,8 +18,8 @@ public class Task {
     @Id
     private String id;
 
-    @Field("creater_id")
-    private String createrId;
+    @Field("user_id")
+    private String userId;
 
     @Field("task_name")
     private String taskName;
