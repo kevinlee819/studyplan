@@ -75,16 +75,17 @@ public class AuthService {
 
         // 若数据库中不存在这个用户
         User user = userService.getByOpenId(wxOpenId);
-        if (null == user){
-            if (null != userInfo){
+        if (null != userInfo){
+            if (null == user){
                 user = new User();
-                user.setUserProsByInfo(userInfo);
                 user.setOpenId(wxOpenId);
-                // 存入数据库
-                userService.saveUser(user);
-            } else {
-                throw new BusinessException("请用户授权！");
             }
+            user.setUserProsByInfo(userInfo);
+            // 存入数据库
+            userService.saveUser(user);
+        }
+        if (null == user){
+            throw new BusinessException("请用户授权！");
         }
         return createTokenByUser(user);
     }

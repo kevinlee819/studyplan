@@ -23,7 +23,7 @@ public class JwtUtil {
     private static String generateToken(Map<String, Object> claims) {
         // 有效期:如1小时,60分钟*60秒*1000毫秒=3600000L;
         // 7天
-        Long expiration = 25_200_000L;
+        Long expiration = 604_800_000L;
         Date expirationDate = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder()
                 .setClaims(claims)

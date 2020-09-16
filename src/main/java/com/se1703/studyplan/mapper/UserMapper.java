@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -60,9 +61,9 @@ public class UserMapper  {
      * @param user
      * @return
      */
-    public boolean saveOne(User user){
+    public String saveOne(User user){
         User res = mongoTemplate.insert(user,"user");
-        return StringUtils.isNotBlank(res.getId());
+        return res.getId();
     }
 
     /**
@@ -79,7 +80,7 @@ public class UserMapper  {
      */
     public boolean deleteOneByOpenId(String openId){
         Query query = new Query();
-        query.addCriteria(Criteria.where("user").is(openId));
+        query.addCriteria(Criteria.where("open_id").is(openId));
         Long count = mongoTemplate.remove(query,"user").getDeletedCount();
         return count > 0;
     }
@@ -90,4 +91,6 @@ public class UserMapper  {
         Long count = mongoTemplate.remove(query,"user").getDeletedCount();
         return count > 0;
     }
+
+
 }

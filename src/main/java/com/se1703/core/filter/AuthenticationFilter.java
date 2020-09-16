@@ -35,9 +35,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return true;
         }
         // swagger
-        Stream<String> swagger = Stream.of("/swagger-resources/**", "/swagger-ui.html", "/v2/**", "/webjars/**");
+        Stream<String> swagger = Stream.of("/api/swagger-resources/**", "/api/swagger-ui.html", "/api/v2/**", "/api/webjars/**");
         // 不需要登录可以访问的公共资源
-        Stream<String> common = Stream.of("/auth/login","/auth/adminLogin");
+        Stream<String> common = Stream.of("/api/auth/login","/api/auth/adminLogin");
         // 校验请求request.getRequestURI()是否匹配
         PathMatcher pathMatcher = new AntPathMatcher();
         return Stream.of(swagger, common).flatMap(item -> item)

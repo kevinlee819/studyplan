@@ -40,6 +40,7 @@ public class SwaggerConfig {
     @Bean
     public Docket userestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .host("www.ningxin.site")
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())
                 .enable(swaggerSwitch)
@@ -57,7 +58,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("学习养成计划")
                 .description("学习养成计划")
-                .termsOfServiceUrl("http://localhost:8080")
+                .termsOfServiceUrl("www.ningxin.site")
                 .version("1.0")
                 .build();
     }

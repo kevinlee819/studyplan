@@ -30,7 +30,8 @@ public class UserService {
      * @param user
      * @return
      */
-    public boolean saveUser(User user){
+    public String saveUser(User user){
         return userMapper.saveOne(user);
     }
+
 }

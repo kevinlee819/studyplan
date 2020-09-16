@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @RestController
 @Api(tags = "用户管理")
 public class AuthController {

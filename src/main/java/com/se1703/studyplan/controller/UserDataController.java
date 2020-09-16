@@ -3,7 +3,9 @@ package com.se1703.studyplan.controller;
 
 import com.se1703.core.Utils.MongoUtils;
 import com.se1703.studyplan.entity.VOs.*;
+import com.se1703.studyplan.service.AuthService;
 import com.se1703.studyplan.service.DiaryService;
+import com.se1703.studyplan.service.TagService;
 import com.se1703.studyplan.service.UserDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping("/api/data")
+@RequestMapping("/data")
 @RestController
 @Api(tags = "数据查询接口")
 public class UserDataController {
@@ -25,6 +28,12 @@ public class UserDataController {
 
     @Autowired
     private DiaryService diaryService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private AuthService authService;
 
     @GetMapping("/getDailyData")
     @ApiOperation(value = "获得时间范围内的任务数和学习时长")
@@ -55,5 +64,12 @@ public class UserDataController {
     public List<ShowDiary> getDiary(){
         return diaryService.getDiary();
     }
+
+    @GetMapping("/getTags")
+    @ApiOperation(value = "获得用户的Tag和共有Tag")
+    public List<String> monthAnalyze() {
+       return new ArrayList<>(TagService.getStringTags(tagService.getUserTag(authService.getCurrentUser().getUserId())));
+    }
+
 
 }

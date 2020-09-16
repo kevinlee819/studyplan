@@ -45,6 +45,9 @@ public class Task {
     @Field("img_url")
     private String imgUrl;
 
+    @Field("is_remind")
+    private Integer isRemind;
+
     /**
      * 1-正在完成
      * 2-超时未完成

@@ -56,9 +56,9 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         } else if (Constant.COMMON.equals(role)){
             //TODO  这里校验访问路径的权限
             // TODO 待补充普通用户Get方法可访问的路径
-            Stream<String> commonUserGet = Stream.of("/auth/getCurrentUser", "/task/**","/data/**");
+            Stream<String> commonUserGet = Stream.of("/api/auth/getCurrentUser", "/api/task/**","/api/data/**");
             // TODO 待补充普通用户Post方法可访问的路径
-            Stream<String> commonUserPost = Stream.of("/task/**","/data/**");
+            Stream<String> commonUserPost = Stream.of("/api/task/**","/api/data/**");
             PathMatcher pathMatcher = new AntPathMatcher();
             if("GET".equals(method)){
                 return Stream.of(commonUserGet).flatMap(item -> item)
