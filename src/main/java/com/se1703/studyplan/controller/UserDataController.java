@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
-@RequestMapping("/data")
+@RequestMapping("/api/data")
 @RestController
 @Api(tags = "数据查询接口")
 public class UserDataController {

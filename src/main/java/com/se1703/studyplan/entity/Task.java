@@ -42,6 +42,9 @@ public class Task {
     @Field("submit_records")
     private List<String> records;
 
+    @Field("img_url")
+    private String imgUrl;
+
     /**
      * 1-正在完成
      * 2-超时未完成

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author leekejin
  * @date 2020/9/15 21:28
  **/
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @RestController
 @Api(tags = "数据管理")
 public class AdminController {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 @RestController
 @Api(tags = "任务管理")
 public class TaskController {

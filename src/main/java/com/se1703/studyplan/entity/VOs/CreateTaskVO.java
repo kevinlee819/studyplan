@@ -30,4 +30,8 @@ public class CreateTaskVO {
     @ApiModelProperty(value = "字符串类型的学习标签列表")
     private List<String> tags;
 
+    @ApiModelProperty(value = "背景图url")
+    private String imgUrl;
+
+
 }
