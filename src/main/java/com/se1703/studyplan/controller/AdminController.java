@@ -75,7 +75,7 @@ public class AdminController {
         return signInLogService.getAll();
     }
 
-    @GetMapping("/getAllSignLog")
+    @GetMapping("/delLogByUserId")
     @ApiOperation(value = "根据用户Id删除登录日志")
     public boolean delLogByUserId(String userId){
         return signInLogService.delByUserId(userId);
