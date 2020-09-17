@@ -1,5 +1,6 @@
 package com.se1703.studyplan.mapper;
 
+import com.se1703.core.constant.Constant;
 import com.se1703.studyplan.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
@@ -92,5 +93,21 @@ public class UserMapper  {
         return count > 0;
     }
 
+
+    public boolean updateUser(User user){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(user.getId()));
+        Update update = new Update();
+        update.set("user_name",user.getUserName());
+        update.set("sex",user.getSex());
+        update.set("avatar_url",user.getAvatarUrl());
+        update.set("province",user.getProvince());
+        update.set("user_role", Constant.COMMON);
+        return mongoTemplate.upsert(query,update,User.class,"user").getModifiedCount() > 0;
+    }
+
+    public List<User> getAllUser(){
+        return mongoTemplate.findAll(User.class,"user");
+    }
 
 }

@@ -34,6 +34,9 @@ public class AuthService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SignInLogService signInLogService;
+
     /**
      * 根据小程序登录返回的code获取openid和session_key
      * https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-login.html?t=20161107
@@ -61,8 +64,9 @@ public class AuthService {
      * @return
      * @throws BusinessException
      */
-    @LogPoint(message = "用户登录：")
+    @LogPoint(message = "'用户登录：'+#wxSessionMap + #userInfo")
     public String generateToken(WxUserInfo userInfo, Map<String,Object> wxSessionMap) throws BusinessException {
+        System.out.println(userInfo);
         if(wxSessionMap.get("errcode") != null && !"0".equals(wxSessionMap.get("errcode").toString())){
             System.out.println(wxSessionMap.toString());
             throw new BusinessException("微信登录错误，错误码" + wxSessionMap.get("errcode").toString() +
@@ -79,14 +83,19 @@ public class AuthService {
             if (null == user){
                 user = new User();
                 user.setOpenId(wxOpenId);
+                user.setUserProsByInfo(userInfo);
+                // 存入数据库
+                userService.saveUser(user);
+            } else {
+                user.setUserProsByInfo(userInfo);
+                // 存入数据库
+                userService.updateUser(user);
             }
-            user.setUserProsByInfo(userInfo);
-            // 存入数据库
-            userService.saveUser(user);
         }
         if (null == user){
             throw new BusinessException("请用户授权！");
         }
+        signInLogService.upsertLog();
         return createTokenByUser(user);
     }
 

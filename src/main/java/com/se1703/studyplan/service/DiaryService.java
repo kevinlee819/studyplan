@@ -4,6 +4,7 @@ import com.se1703.core.Utils.MongoUtils;
 import com.se1703.studyplan.entity.Diary;
 import com.se1703.studyplan.entity.VOs.CreateDiary;
 import com.se1703.studyplan.entity.VOs.ShowDiary;
+import com.se1703.studyplan.entity.VOs.TimeVO;
 import com.se1703.studyplan.mapper.DiaryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,10 @@ public class DiaryService {
 
     public List<ShowDiary> getDiary(){
         List<Diary> diaries = diaryMapper.findByUserId(authService.getCurrentUser().getUserId());
+        return diary2Show(diaries);
+    }
+
+    private List<ShowDiary> diary2Show(List<Diary> diaries){
         if (diaries == null || diaries.isEmpty()){
             return null;
         }
@@ -46,5 +51,11 @@ public class DiaryService {
         }
         return showDiaries;
     }
+
+    public List<ShowDiary> getDiary(TimeVO timeVO){
+        List<Diary> diaries = diaryMapper.getDiaryByDate(timeVO.getStartTime(),timeVO.getEndTime(),authService.getCurrentUser().getUserId());
+        return diary2Show(diaries);
+    }
+
 
 }

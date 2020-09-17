@@ -3,6 +3,7 @@ package com.se1703.studyplan.controller;
 
 import com.se1703.studyplan.entity.VOs.AdminUser;
 import com.se1703.studyplan.entity.VOs.CurrentUserVO;
+import com.se1703.studyplan.entity.VOs.LoginVO;
 import com.se1703.studyplan.entity.VOs.WxUserInfo;
 import com.se1703.studyplan.service.AuthService;
 import io.swagger.annotations.Api;
@@ -22,9 +23,8 @@ public class AuthController {
 
     @PostMapping("/login")
     @ApiOperation(value = "传入userInfo和code")
-    public String createJwt(WxUserInfo userInfo,
-                            @RequestParam(required = true,value = "code")String wxCode) throws Exception {
-        return authService.generateToken(userInfo,authService.getWeSession(wxCode));
+    public String createJwt(@RequestBody LoginVO loginVO) throws Exception {
+        return authService.generateToken(loginVO.getUserInfo(),authService.getWeSession(loginVO.getCode()));
     }
 
     @GetMapping("/getCurrentUser")

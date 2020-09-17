@@ -48,15 +48,10 @@ public class UserDataService {
             TaskVO taskVO = userDataInputVO.getTask();
             task.setId(taskVO.getId());
             task.setTaskName(taskVO.getTaskName());
-//            if (taskVO.getTags() != null && !taskVO.getTags().isEmpty()) {
-//                List<Tag> tags = new ArrayList<>();
-//                for (String tagName : taskVO.getTags()) {
-//                    Tag e = new Tag();
-//                    e.setTagName(tagName);
-//                    tags.add(e);
-//                }
-//                task.setTags(tags);
-//            }
+            Task tmp = taskService.getTaskById(taskVO.getId());
+            if (tmp != null){
+                task.setTags(tmp.getTags());
+            }
         }
         userData.setTask(task);
         String recordId = userDataMapper.saveOne(userData);
@@ -185,5 +180,14 @@ public class UserDataService {
         return list;
     }
 
+
+    public boolean delByTaskId(String taskId){
+       return userDataMapper.delTaskRecord(taskId);
+    }
+
+
+    public List<UserData> getUserDataByUserId(String userId){
+        return userDataMapper.findByUserId(userId);
+    }
 }
 

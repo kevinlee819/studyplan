@@ -39,8 +39,10 @@ public class CreateTaskVO {
     @ApiModelProperty(value = "背景图url")
     private String imgUrl;
 
-    @ApiModelProperty(value = "是否提醒")
+    @ApiModelProperty(value = "是否提醒,0-否,1-是")
     private Integer isRemind;
 
+    @ApiModelProperty(value = "时长")
+    private Integer minute;
 
 }

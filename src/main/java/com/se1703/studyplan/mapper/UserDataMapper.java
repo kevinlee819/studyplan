@@ -108,5 +108,12 @@ public class UserDataMapper {
         return mongoTemplate.find(query, UserData.class, "user_data");
     }
 
+    public boolean delTaskRecord(String taskId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("task._id").is(taskId));
+        return mongoTemplate.remove(query,UserData.class,"user_data").getDeletedCount() > 0;
+    }
+
+
 
 }

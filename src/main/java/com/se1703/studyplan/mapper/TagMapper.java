@@ -69,4 +69,8 @@ public class TagMapper {
         return mongoTemplate.insert(tag,"tag").getId();
     }
 
+
+    public List<Tag> getAllTag(){
+        return mongoTemplate.findAll(Tag.class,"tag");
+    }
 }

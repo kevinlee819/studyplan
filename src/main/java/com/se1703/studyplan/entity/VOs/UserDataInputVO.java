@@ -17,7 +17,7 @@ public class UserDataInputVO {
     private TaskVO task;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" ,timezone = "GMT+8")
-    @DateTimeFormat(pattern="yyyy-MM-dd ")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "开始时间")
     private Date startTime;
 

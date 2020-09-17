@@ -125,4 +125,8 @@ public class TaskMapper {
         return mongoTemplate.updateFirst(query, update, "task").getModifiedCount() > 0;
     }
 
+    public List<Task> findAll(){
+        return mongoTemplate.findAll(Task.class,"task");
+    }
+
 }

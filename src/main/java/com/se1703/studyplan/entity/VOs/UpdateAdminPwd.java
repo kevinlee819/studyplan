@@ -1,6 +1,7 @@
 package com.se1703.studyplan.entity.VOs;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
  * @author leekejin
  * @date 2020/9/15 22:21
  **/
+@Data
 public class UpdateAdminPwd {
     @NotBlank(message = "用户名不能为空")
     @ApiModelProperty(value = "用户名", required = true)

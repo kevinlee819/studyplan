@@ -37,7 +37,7 @@ public class Task {
     private Date endTime;
 
     @Field("tags")
-    private List<Tag> tags;
+    private List<String> tags;
 
     @Field("submit_records")
     private List<String> records;
@@ -55,5 +55,8 @@ public class Task {
      */
     @Field("status")
     private Integer status;
+
+    @Field("minute")
+    private Integer minute;
 
 }

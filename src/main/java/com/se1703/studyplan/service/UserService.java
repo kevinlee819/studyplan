@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author leekejin
@@ -32,6 +33,15 @@ public class UserService {
      */
     public String saveUser(User user){
         return userMapper.saveOne(user);
+    }
+
+
+    public boolean updateUser(User user) {
+        return userMapper.updateUser(user);
+    }
+
+    public List<User> getAllUser(){
+        return userMapper.getAllUser();
     }
 
 }

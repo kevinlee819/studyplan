@@ -1,18 +1,21 @@
 package com.se1703.studyplan.service;
 
+import com.se1703.core.Utils.MongoUtils;
+import com.se1703.core.Utils.TimeUtils;
+import com.se1703.core.constant.Constant;
 import com.se1703.core.exception.BusinessException;
 import com.se1703.studyplan.entity.Tag;
 import com.se1703.studyplan.entity.Task;
 import com.se1703.studyplan.entity.VOs.CreateTaskVO;
 import com.se1703.studyplan.entity.VOs.Result;
+import com.se1703.studyplan.entity.VOs.ShowTaskVO;
+import com.se1703.studyplan.entity.VOs.TaskVO;
 import com.se1703.studyplan.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author leekejin
@@ -29,6 +32,9 @@ public class TaskService {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private UserDataService userDataService;
+
     /**
      * 保存task
      * @param taskVO
@@ -39,22 +45,33 @@ public class TaskService {
             throw new BusinessException("task 空数据");
         }
         Task task = new Task();
-        BeanUtils.copyProperties(task,taskVO);
+        BeanUtils.copyProperties(taskVO,task);
         String userId = authService.getCurrentUser().getUserId();
         task.setUserId(userId);
-        task.setStatus(1);
+        if (taskVO.getTimes() != null && taskVO.getTimes() > 0){
+            task.setStatus(Constant.DOING);
+        } else {
+            task.setStatus(Constant.FINISH);
+        }
         // 下面对数据库内不存在的tag进行新增
-        Set<String> tagSetNew = new HashSet<>(taskVO.getTags());
-        Set<String> tagSetOld = TagService.getStringTags(tagService.getUserTag(userId));
-        for (String s : tagSetNew) {
-            if (!tagSetOld.contains(s)){
-                Tag tag = new Tag();
-                tag.setTagName(s);
-                tag.setUserId(userId);
-                tagService.saveTag(tag);
+        Set<String> tagSetNew = new HashSet<>();
+        if (taskVO.getTags()!= null && !taskVO.getTags().isEmpty()){
+            for (String tag : taskVO.getTags()) {
+                tagSetNew.add(tag);
             }
         }
-        task.setTags(tagService.getUserTag(userId));
+        Set<String> tagSetOld = TagService.getStringTags(tagService.getUserTag(userId));
+        if (!tagSetNew.isEmpty()){
+            for (String s : tagSetNew) {
+                if (!tagSetOld.contains(s)){
+                    Tag tag = new Tag();
+                    tag.setTagName(s);
+                    tag.setUserId(userId);
+                    tagService.saveTag(tag);
+                }
+            }
+        }
+        task.setTags(taskVO.getTags());
        return taskMapper.saveOne(task);
     }
 
@@ -73,7 +90,7 @@ public class TaskService {
             return Result.ERR_DATABASE_CANT_REFRESH;
         }
         if (times+1 >= maxtimes){
-            if (taskMapper.updateStatus(3,taskId)){
+            if (taskMapper.updateStatus(Constant.FINISH,taskId)){
                 return Result.MISSION_COMPLETED;
             } else {
                 return Result.ERR_DATABASE_CANT_REFRESH;
@@ -84,6 +101,65 @@ public class TaskService {
 
     public List<Task> getUserTask(){
         return taskMapper.findByUserId(authService.getCurrentUser().getUserId());
+    }
+
+    public List<ShowTaskVO> getTaskDetail(){
+        return getTaskDetail(authService.getCurrentUser().getUserId());
+    }
+
+    public List<ShowTaskVO> getTaskDetail(String userId){
+        List<Task> tasks = taskMapper.findByUserId(userId);
+        if (tasks == null || tasks.isEmpty()){
+            return null;
+        }
+        List<ShowTaskVO> taskVOS = new ArrayList<>();
+        for (Task task : tasks) {
+            System.out.println(task);
+            ShowTaskVO taskVO = new ShowTaskVO();
+            BeanUtils.copyProperties(task,taskVO);
+            if (task.getRecords() != null){
+                taskVO.setCount(task.getRecords().size());
+            }
+            taskVO.setTags(task.getTags());
+            taskVO.setCreateTime(MongoUtils.objectId2Date(task.getId()));
+            System.out.println(taskVO);
+            taskVOS.add(taskVO);
+        }
+        return taskVOS;
+    }
+
+
+    public boolean delTask(String taskId){
+        //删除任务记录和提交记录
+        boolean flag = taskMapper.deleteById(taskId);
+        userDataService.delByTaskId(taskId);
+        return flag;
+    }
+
+    public Task getTaskById(String taskId){
+        return taskMapper.findOneById(taskId);
+    }
+
+    public void refreshTask(){
+        List<Task> tasks = taskMapper.findAll();
+        for (Task task : tasks) {
+            if (task.getRecords() != null && !task.getRecords().isEmpty()){
+                if (task.getTimes() != null && task.getTimes() > 0){
+                    if (task.getRecords().size() >= task.getTimes()){
+                        taskMapper.updateStatus(Constant.FINISH,task.getId());
+                    }
+                }
+            }
+            if (task.getEndTime() != null){
+                Calendar ddl = Calendar.getInstance();
+                ddl.setTime(task.getEndTime());
+                Calendar now = Calendar.getInstance();
+                now.setTime(new Date());
+                if (now.after(ddl)){
+                    taskMapper.updateStatus(Constant.TIME_OUT,task.getId());
+                }
+            }
+        }
     }
 
 
