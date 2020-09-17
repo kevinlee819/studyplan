@@ -114,7 +114,6 @@ public class TaskService {
         }
         List<ShowTaskVO> taskVOS = new ArrayList<>();
         for (Task task : tasks) {
-            System.out.println(task);
             ShowTaskVO taskVO = new ShowTaskVO();
             BeanUtils.copyProperties(task,taskVO);
             if (task.getRecords() != null){
@@ -122,7 +121,6 @@ public class TaskService {
             }
             taskVO.setTags(task.getTags());
             taskVO.setCreateTime(MongoUtils.objectId2Date(task.getId()));
-            System.out.println(taskVO);
             taskVOS.add(taskVO);
         }
         return taskVOS;
