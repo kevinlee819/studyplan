@@ -6,10 +6,7 @@ import com.se1703.core.constant.Constant;
 import com.se1703.core.exception.BusinessException;
 import com.se1703.studyplan.entity.Tag;
 import com.se1703.studyplan.entity.Task;
-import com.se1703.studyplan.entity.VOs.CreateTaskVO;
-import com.se1703.studyplan.entity.VOs.Result;
-import com.se1703.studyplan.entity.VOs.ShowTaskVO;
-import com.se1703.studyplan.entity.VOs.TaskVO;
+import com.se1703.studyplan.entity.VOs.*;
 import com.se1703.studyplan.mapper.TaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,11 +45,10 @@ public class TaskService {
         BeanUtils.copyProperties(taskVO,task);
         String userId = authService.getCurrentUser().getUserId();
         task.setUserId(userId);
-        if (taskVO.getTimes() != null && taskVO.getTimes() > 0){
-            task.setStatus(Constant.DOING);
-        } else {
-            task.setStatus(Constant.FINISH);
+        if (taskVO.getTimes() == null || taskVO.getTimes() <= 0){
+            task.setTimes(1);
         }
+        task.setStatus(Constant.DOING);
         // 下面对数据库内不存在的tag进行新增
         Set<String> tagSetNew = new HashSet<>();
         if (taskVO.getTags()!= null && !taskVO.getTags().isEmpty()){
@@ -89,7 +85,7 @@ public class TaskService {
         if(!taskMapper.saveRecord(recordId,taskId)){
             return Result.ERR_DATABASE_CANT_REFRESH;
         }
-        if (times+1 >= maxtimes){
+        if (times+1 == maxtimes){
             if (taskMapper.updateStatus(Constant.FINISH,taskId)){
                 return Result.MISSION_COMPLETED;
             } else {
@@ -160,5 +156,17 @@ public class TaskService {
         }
     }
 
+
+    public Integer getCountById(String id){
+        return taskMapper.countRecord(id);
+    }
+
+    public boolean canSaveRecord(String taskId){
+        return taskMapper.countRecord(taskId) < taskMapper.findOneById(taskId).getTimes();
+    }
+
+    public boolean updateTask(UpdateTaskVO updateTaskVO){
+        return taskMapper.updateTask(updateTaskVO);
+    }
 
 }

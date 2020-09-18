@@ -54,6 +54,9 @@ public class UserDataService {
             }
         }
         userData.setTask(task);
+        if (!taskService.canSaveRecord(task.getId())){
+            throw new BusinessException("任务提交次数已满!");
+        }
         String recordId = userDataMapper.saveOne(userData);
         if (recordId == null) {
             throw new BusinessException("无法存入数据！");
@@ -75,11 +78,11 @@ public class UserDataService {
      * @param timeVO
      * @return
      */
-    public DailyData computeDailyLearnTime(TimeVO timeVO) {
+    public DailyData computeDailyLearnTime(TimeVO timeVO) throws ParseException {
         if (timeVO == null) {
             return null;
         }
-        List<UserData> userDataList = userDataMapper.getRecordByDateAndUserId(timeVO.getStartTime(), timeVO.getEndTime(), authService.getCurrentUser().getUserId());
+        List<UserData> userDataList = userDataMapper.getRecordByDateAndUserId(timeVO.getStartTime(), TimeUtils.genFullClockDate(timeVO.getEndTime()), authService.getCurrentUser().getUserId());
         if (userDataList == null || userDataList.isEmpty()) {
             return null;
         }
@@ -100,11 +103,11 @@ public class UserDataService {
      * @param timeVO
      * @return
      */
-    public List<TimeDistributionVO> timeDistribution(TimeVO timeVO) {
+    public List<TimeDistributionVO> timeDistribution(TimeVO timeVO) throws ParseException {
         if (timeVO == null) {
             return null;
         }
-        List<UserData> userDataList = userDataMapper.getRecordByDateAndUserId(timeVO.getStartTime(), timeVO.getEndTime(), authService.getCurrentUser().getUserId());
+        List<UserData> userDataList = userDataMapper.getRecordByDateAndUserId(timeVO.getStartTime(), TimeUtils.genFullClockDate(timeVO.getEndTime()), authService.getCurrentUser().getUserId());
         if (userDataList == null || userDataList.isEmpty()) {
             return null;
         }
@@ -135,7 +138,7 @@ public class UserDataService {
         if (timeVO == null) {
             return null;
         }
-        List<UserData> userDataList = userDataMapper.getRecordByDateAndUserId(timeVO.getStartTime(), timeVO.getEndTime(), authService.getCurrentUser().getUserId());
+        List<UserData> userDataList = userDataMapper.getRecordByDateAndUserId(timeVO.getStartTime(), TimeUtils.genFullClockDate(timeVO.getEndTime()), authService.getCurrentUser().getUserId());
         if (userDataList == null || userDataList.isEmpty()) {
             return null;
         }
@@ -144,7 +147,7 @@ public class UserDataService {
             //开始时间和结束时间在同一天
             if (TimeUtils.isSameDay(userData.getStartTime(), userData.getEndTime())) {
                 MonthAnalyze monthAnalyze = new MonthAnalyze();
-                monthAnalyze.setDay(new SimpleDateFormat("yyyy-MM-dd").parse(userData.getStartTime().toString()));
+                monthAnalyze.setDay(userData.getStartTime());
                 Long between = TimeUtils.timeDiff(userData.getStartTime(), userData.getEndTime());
                 if (list.contains(monthAnalyze)) {
                     int index = list.indexOf(monthAnalyze);
@@ -158,9 +161,9 @@ public class UserDataService {
                 Long pre = TimeUtils.timeDiff(userData.getStartTime(), TimeUtils.genFullClockDate(userData.getStartTime()));
                 Long next = TimeUtils.timeDiff(TimeUtils.genZeroClockDate(userData.getEndTime()), userData.getEndTime());
                 MonthAnalyze preM = new MonthAnalyze();
-                preM.setDay(new SimpleDateFormat("yyyy-MM-dd").parse(userData.getStartTime().toString()));
+                preM.setDay(userData.getStartTime());
                 MonthAnalyze nextM = new MonthAnalyze();
-                nextM.setDay(new SimpleDateFormat("yyyy-MM-dd").parse(userData.getEndTime().toString()));
+                nextM.setDay(userData.getEndTime());
                 if (list.contains(preM)) {
                     int index = list.indexOf(preM);
                     list.get(index).setLearnTime(list.get(index).getLearnTime() + pre);

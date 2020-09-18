@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author leekejin
@@ -60,9 +61,10 @@ public class TimeUtils {
      */
     public static Date genZeroClockDate(Date date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date1 = format.parse(date.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        Date date2 = sdf.parse(date.toString());
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date1);
+        calendar.setTime(date2);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -76,12 +78,26 @@ public class TimeUtils {
      */
     public static Date genFullClockDate(Date date) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date1 = format.parse(date.toString());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+        Date date2 = sdf.parse(date.toString());
+        format.format(date2);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date1);
+        calendar.setTime(date2);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
         return calendar.getTime();
     }
+
+
+    public static boolean isBetween(Date startDate, Date endDate, Date centerDate){
+        Calendar pre = Calendar.getInstance();
+        Calendar next = Calendar.getInstance();
+        Calendar center = Calendar.getInstance();
+        pre.setTime(startDate);
+        next.setTime(endDate);
+        center.setTime(centerDate);
+        return center.before(endDate) && center.after(startDate);
+    }
+
 }

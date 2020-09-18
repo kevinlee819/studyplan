@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,9 +26,9 @@ public class MongoUtils {
         return date;
     }
 
-    public static String date2ObjectId(Date date){
+    public static ObjectId date2ObjectId(Date date){
         ObjectId objectId = new ObjectId(date);
-        return objectId.toString();
+        return objectId;
     }
 
 }

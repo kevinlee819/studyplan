@@ -3,6 +3,7 @@ package com.se1703.studyplan.mapper;
 import com.se1703.core.Utils.MongoUtils;
 import com.se1703.studyplan.entity.UserData;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -105,6 +106,7 @@ public class UserDataMapper {
                 .gte(MongoUtils.date2ObjectId(startDate))
                 .lte(MongoUtils.date2ObjectId(endDate))
                 .and("user_id").is(userId));
+
         return mongoTemplate.find(query, UserData.class, "user_data");
     }
 

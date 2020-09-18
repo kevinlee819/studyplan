@@ -1,5 +1,6 @@
 package com.se1703.studyplan.service;
 
+import com.se1703.core.entity.TokenEntity;
 import com.se1703.studyplan.entity.SignInLog;
 import com.se1703.studyplan.mapper.SignInLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ public class SignInLogService {
     @Autowired
     private SignInLogMapper signInLogMapper;
 
-    public boolean upsertLog(){
+    public boolean upsertLog(TokenEntity tokenEntity){
         SignInLog signInLog = new SignInLog();
-        signInLog.setUserId(authService.getCurrentUser().getUserId());
-        signInLog.setUserName(authService.getCurrentUser().getUserName());
+        signInLog.setUserId(tokenEntity.getUserId());
+        signInLog.setUserName(tokenEntity.getUserName());
         signInLog.setLatestLogTime(new Date());
         return signInLogMapper.upsertLog(signInLog);
     }

@@ -3,6 +3,7 @@ package com.se1703.studyplan.controller;
 import com.se1703.studyplan.entity.Task;
 import com.se1703.studyplan.entity.VOs.CreateTaskVO;
 import com.se1703.studyplan.entity.VOs.ShowTaskVO;
+import com.se1703.studyplan.entity.VOs.UpdateTaskVO;
 import com.se1703.studyplan.entity.VOs.UserDataInputVO;
 import com.se1703.studyplan.service.TaskService;
 import com.se1703.studyplan.service.UserDataService;
@@ -52,6 +53,12 @@ public class TaskController {
     @ApiOperation(value = "刷新任务状态")
     public void refreshTaskStatus() {
         taskService.refreshTask();
+    }
+
+    @PostMapping("/updateTask")
+    @ApiOperation(value = "更新任务")
+    public boolean updateTask(@RequestBody UpdateTaskVO updateTaskVO){
+        return taskService.updateTask(updateTaskVO);
     }
 
 

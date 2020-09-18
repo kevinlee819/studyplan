@@ -95,7 +95,6 @@ public class AuthService {
         if (null == user){
             throw new BusinessException("请用户授权！");
         }
-        signInLogService.upsertLog();
         return createTokenByUser(user);
     }
 
@@ -118,6 +117,7 @@ public class AuthService {
             e.printStackTrace();
             throw new BusinessException("创建token失败");
         }
+        signInLogService.upsertLog(tokenEntity);
         return token;
     }
 

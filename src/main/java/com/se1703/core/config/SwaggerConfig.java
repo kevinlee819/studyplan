@@ -40,7 +40,7 @@ public class SwaggerConfig {
     @Bean
     public Docket userestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                //.host("www.ningxin.site")
+                .host("www.ningxin.site")
                 .securitySchemes(securitySchemes())
                 .securityContexts(securityContexts())
                 .enable(swaggerSwitch)

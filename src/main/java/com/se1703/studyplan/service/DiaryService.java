@@ -1,6 +1,7 @@
 package com.se1703.studyplan.service;
 
 import com.se1703.core.Utils.MongoUtils;
+import com.se1703.core.Utils.TimeUtils;
 import com.se1703.studyplan.entity.Diary;
 import com.se1703.studyplan.entity.VOs.CreateDiary;
 import com.se1703.studyplan.entity.VOs.ShowDiary;
@@ -9,6 +10,7 @@ import com.se1703.studyplan.mapper.DiaryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,15 +49,23 @@ public class DiaryService {
             showDiary.setDate(MongoUtils.objectId2Date(diary.getId()));
             showDiary.setContent(diary.getContent());
             showDiary.setTitle(diary.getTitle());
+            showDiary.setId(diary.getId());
             showDiaries.add(showDiary);
         }
         return showDiaries;
     }
 
-    public List<ShowDiary> getDiary(TimeVO timeVO){
-        List<Diary> diaries = diaryMapper.getDiaryByDate(timeVO.getStartTime(),timeVO.getEndTime(),authService.getCurrentUser().getUserId());
+    public List<ShowDiary> getDiary(TimeVO timeVO) throws ParseException {
+        List<Diary> diaries = diaryMapper.getDiaryByDate(timeVO.getStartTime(), TimeUtils.genFullClockDate(timeVO.getEndTime()),authService.getCurrentUser().getUserId());
         return diary2Show(diaries);
     }
 
+    public boolean delById(String id){
+        return diaryMapper.deleteById(id);
+    }
+
+    public boolean updateDiary(ShowDiary showDiary){
+        return diaryMapper.updateDiary(showDiary);
+    }
 
 }

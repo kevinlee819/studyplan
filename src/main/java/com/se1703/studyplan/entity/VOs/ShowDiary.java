@@ -20,6 +20,9 @@ public class ShowDiary {
     @ApiModelProperty(value = "内容")
     private String content;
 
+    @ApiModelProperty(value = "id")
+    private String id;
+
     @ApiModelProperty(value = "日期")
     @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+8")
     @DateTimeFormat(pattern="yyyy-MM-dd")

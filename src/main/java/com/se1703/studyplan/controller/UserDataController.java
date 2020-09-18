@@ -8,6 +8,7 @@ import com.se1703.studyplan.service.DiaryService;
 import com.se1703.studyplan.service.TagService;
 import com.se1703.studyplan.service.UserDataService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +35,13 @@ public class UserDataController {
 
     @PostMapping("/getDailyData")
     @ApiOperation(value = "获得时间范围内的任务数和学习时长")
-    public DailyData dailyData(@RequestBody TimeVO timeVO){
+    public DailyData dailyData(@RequestBody TimeVO timeVO) throws ParseException {
         return userDataService.computeDailyLearnTime(timeVO);
     }
 
     @PostMapping("/timeDistribution")
     @ApiOperation(value = "获得时间范围内的任务时间分布")
-    public List<TimeDistributionVO> getDistribution(@RequestBody TimeVO timeVO){
+    public List<TimeDistributionVO> getDistribution(@RequestBody TimeVO timeVO) throws ParseException {
         return userDataService.timeDistribution(timeVO);
     }
 
@@ -62,6 +63,19 @@ public class UserDataController {
         return diaryService.getDiary();
     }
 
+    @GetMapping("/delDiaryById")
+    @ApiModelProperty(value = "根据id删除日记")
+    public boolean delDiary(String id){
+        return diaryService.delById(id);
+    }
+
+    @PostMapping("/updateDiaryById")
+    @ApiModelProperty(value = "根据id修改日记")
+    public boolean updateDiary(@RequestBody ShowDiary showDiary){
+        return diaryService.updateDiary(showDiary);
+    }
+
+
     @GetMapping("/getTags")
     @ApiOperation(value = "获得用户的Tag和共有Tag")
     public List<String> monthAnalyze() {
@@ -70,7 +84,7 @@ public class UserDataController {
 
     @PostMapping("/getDiaryByDate")
     @ApiOperation(value = "按时间范围获得日记")
-    public List<ShowDiary> getDiaryByDate(@RequestBody TimeVO timeVO){
+    public List<ShowDiary> getDiaryByDate(@RequestBody TimeVO timeVO) throws ParseException {
         return diaryService.getDiary(timeVO);
     }
 

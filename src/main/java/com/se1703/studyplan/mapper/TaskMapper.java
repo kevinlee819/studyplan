@@ -1,6 +1,7 @@
 package com.se1703.studyplan.mapper;
 
 import com.se1703.studyplan.entity.Task;
+import com.se1703.studyplan.entity.VOs.UpdateTaskVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -129,4 +130,16 @@ public class TaskMapper {
         return mongoTemplate.findAll(Task.class,"task");
     }
 
+
+    public boolean updateTask(UpdateTaskVO updateTaskVO){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(updateTaskVO.getId()));
+        Update update = new Update();
+        update.set("task_name",updateTaskVO.getTaskName());
+        update.set("task_type",updateTaskVO.getTaskType());
+        update.set("img_url", updateTaskVO.getImgUrl());
+        update.set("is_remind",updateTaskVO.getIsRemind());
+        update.set("minute",updateTaskVO.getMinute());
+        return mongoTemplate.updateFirst(query,update,Task.class,"task").getModifiedCount() > 0;
+    }
 }
