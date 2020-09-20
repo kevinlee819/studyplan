@@ -66,13 +66,10 @@ public class AuthService {
      */
     @LogPoint(message = "'用户登录：'+#wxSessionMap + #userInfo")
     public String generateToken(WxUserInfo userInfo, Map<String,Object> wxSessionMap) throws BusinessException {
-        System.out.println(userInfo);
         if(wxSessionMap.get("errcode") != null && !"0".equals(wxSessionMap.get("errcode").toString())){
-            System.out.println(wxSessionMap.toString());
             throw new BusinessException("微信登录错误，错误码" + wxSessionMap.get("errcode").toString() +
                     ", 请查询https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html 错误码errcode");
         }
-        System.out.println(wxSessionMap.toString());
         // 加密后存储
         String wxOpenId = Sm3Utils.hmac((String)wxSessionMap.get("openid"));
         String wxSessionKey = (String)wxSessionMap.get("session_key");
@@ -140,7 +137,6 @@ public class AuthService {
         String account = entity.getUserName();
         String password = entity.getPassword();
         String key = Sm3Utils.hmac(account.concat("&").concat(password));
-        System.out.println(key);
         User user = userService.getByOpenId(key);
         if (user == null) {
             throw new BusinessException("请检查用户名或密码", HttpStatusCodeEnum.BAD_REQUEST);

@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RequestMapping("/task")
@@ -51,7 +52,7 @@ public class TaskController {
 
     @GetMapping("/refreshTaskStatus")
     @ApiOperation(value = "刷新任务状态")
-    public void refreshTaskStatus() {
+    public void refreshTaskStatus() throws ParseException {
         taskService.refreshTask();
     }
 

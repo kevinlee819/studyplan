@@ -22,7 +22,6 @@ public class MongoUtils {
         }
         long time = Integer.parseInt(objectId.substring(0, 8), 16) * 1000L;
         Date date = new Date(time);
-        System.out.println(date.toString());
         return date;
     }
 

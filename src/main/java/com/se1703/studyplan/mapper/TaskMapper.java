@@ -112,10 +112,10 @@ public class TaskMapper {
     public Integer countRecord(String taskId){
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(taskId));
-        List<Task> list = mongoTemplate.find(query,Task.class,"task");
-        if (list != null && list.size() != 0) {
-            return list.size();
-        } else {return 0;}
+        Task task = mongoTemplate.findOne(query,Task.class,"task");
+        if (task.getRecords() == null || task.getRecords().isEmpty()) {
+            return 0;
+        } else {return task.getRecords().size();}
     }
 
     public boolean updateStatus(Integer status, String taskId){

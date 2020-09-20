@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -134,7 +135,7 @@ public class TaskService {
         return taskMapper.findOneById(taskId);
     }
 
-    public void refreshTask(){
+    public void refreshTask() throws ParseException {
         List<Task> tasks = taskMapper.findAll();
         for (Task task : tasks) {
             if (task.getRecords() != null && !task.getRecords().isEmpty()){
@@ -146,7 +147,7 @@ public class TaskService {
             }
             if (task.getEndTime() != null){
                 Calendar ddl = Calendar.getInstance();
-                ddl.setTime(task.getEndTime());
+                ddl.setTime(TimeUtils.genFullClockDate(task.getEndTime()));
                 Calendar now = Calendar.getInstance();
                 now.setTime(new Date());
                 if (now.after(ddl)){
