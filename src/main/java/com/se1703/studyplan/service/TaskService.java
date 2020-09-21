@@ -170,4 +170,8 @@ public class TaskService {
         return taskMapper.updateTask(updateTaskVO);
     }
 
+
+    public boolean delByUserId(String userId){
+        return taskMapper.deleteByUserId(userId);
+    }
 }

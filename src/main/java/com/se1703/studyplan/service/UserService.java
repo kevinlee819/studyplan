@@ -1,6 +1,9 @@
 package com.se1703.studyplan.service;
 
+import com.se1703.core.entity.MongoPageHelper;
+import com.se1703.core.entity.PageResult;
 import com.se1703.studyplan.entity.User;
+import com.se1703.studyplan.entity.VOs.PageVO;
 import com.se1703.studyplan.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,19 @@ import java.util.List;
 public class UserService {
     @Resource
     private UserMapper userMapper;
+
+    @Autowired
+    private DiaryService diaryService;
+    @Autowired
+    private SignInLogService signInLogService;
+    @Autowired
+    private TagService tagService;
+    @Autowired
+    private TaskService taskService;
+    @Autowired
+    private UserDataService userDataService;
+    @Autowired
+    private MongoPageHelper mongoPageHelper;
 
     /**
      * 通过openId获得用户
@@ -40,8 +56,18 @@ public class UserService {
         return userMapper.updateUser(user);
     }
 
-    public List<User> getAllUser(){
-        return userMapper.getAllUser();
+    public PageResult<User> getAllUser(PageVO pageVO){
+        return userMapper.getAllUser(pageVO);
+    }
+
+    public boolean delUser(String userId){
+        diaryService.delByUserId(userId);
+        signInLogService.delByUserId(userId);
+        tagService.delByUserId(userId);
+        taskService.delByUserId(userId);
+        userDataService.delByUserId(userId);
+        boolean flag = userMapper.deleteOneByUserId(userId);
+        return flag;
     }
 
 }

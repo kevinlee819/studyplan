@@ -1,7 +1,10 @@
 package com.se1703.studyplan.mapper;
 
 import com.se1703.core.constant.Constant;
+import com.se1703.core.entity.MongoPageHelper;
+import com.se1703.core.entity.PageResult;
 import com.se1703.studyplan.entity.User;
+import com.se1703.studyplan.entity.VOs.PageVO;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ import java.util.List;
 public class UserMapper  {
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private MongoPageHelper mongoPageHelper;
 
 
     /**
@@ -110,4 +116,10 @@ public class UserMapper  {
         return mongoTemplate.findAll(User.class,"user");
     }
 
+
+    public PageResult<User> getAllUser(PageVO pageVO){
+        Query query = new Query();
+        PageResult<User> pageResult = mongoPageHelper.pageQuery(query,User.class,pageVO.getPageNum(),pageVO.getPageSize(),"user");
+        return pageResult;
+    }
 }

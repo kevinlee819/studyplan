@@ -68,4 +68,8 @@ public class DiaryService {
         return diaryMapper.updateDiary(showDiary);
     }
 
+
+    public boolean delByUserId(String userId){
+        return diaryMapper.delByUserId(userId);
+    }
 }

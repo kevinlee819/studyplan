@@ -59,4 +59,10 @@ public class DiaryMapper {
         update.set("content",showDiary.getContent());
         return mongoTemplate.updateFirst(query,update,Diary.class,"diary").getModifiedCount() > 0;
     }
+
+    public boolean delByUserId(String userId){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("user_id").is(userId));
+        return mongoTemplate.remove(query,Diary.class,"diary").getDeletedCount() > 0;
+    }
 }

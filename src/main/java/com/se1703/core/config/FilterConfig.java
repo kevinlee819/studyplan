@@ -25,7 +25,7 @@ public class FilterConfig {
     }
 
     /**
-     * 在拦截器中需要用到查询数据库校验权限，不注册到Bean，注入为null
+     * 在拦截器中需要用到查询校验权限，不注册到Bean，注入为null
      */
     @Bean
     public AuthorizationFilter authorizationFilter() {

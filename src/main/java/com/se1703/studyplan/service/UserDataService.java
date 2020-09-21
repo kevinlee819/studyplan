@@ -192,5 +192,9 @@ public class UserDataService {
     public List<UserData> getUserDataByUserId(String userId){
         return userDataMapper.findByUserId(userId);
     }
+
+    public boolean delByUserId(String userId){
+        return userDataMapper.deleteByUserId(userId);
+    }
 }
 

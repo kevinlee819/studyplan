@@ -136,4 +136,8 @@ public class TagService {
         }
         return distributions;
     }
+
+    public boolean delByUserId(String userId){
+        return tagMapper.deleteByUserId(userId);
+    }
 }
